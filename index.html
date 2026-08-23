@@ -95,6 +95,9 @@
       .slide { padding-block: 32px; }
       .nav { margin-top: 10px; }
     }
+    @media (min-width: 521px) {
+      .nav { position: fixed; z-index: 10; left: 50%; bottom: 20px; width: min(calc(100% - 48px), 850px); margin: 0; padding: 6px; border: 1px solid rgba(100, 37, 54, .2); border-radius: 6px; background: rgba(255, 248, 237, .88); box-shadow: 0 8px 24px rgba(100, 37, 54, .14); transform: translateX(-50%); }
+    }
     @media (max-width: 520px) {
       .presentation { display: flex; flex-direction: column; min-height: 100svh; padding: 13px 14px max(12px, env(safe-area-inset-bottom)); }
       .topline { font-size: .63rem; letter-spacing: .09em; }
