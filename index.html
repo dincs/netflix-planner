@@ -61,6 +61,8 @@
     .brainrot-button { min-height: 44px; padding: 10px 18px; border: 2px solid var(--wine); border-radius: 4px; color: var(--cream); background: var(--wine); box-shadow: 4px 4px 0 var(--berry); cursor: pointer; font: 700 .75rem/1 "Trebuchet MS", sans-serif; letter-spacing: .06em; text-transform: uppercase; }
     .brainrot-button:hover, .brainrot-button:focus-visible { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--berry); outline: none; }
     .brainrot-score { min-height: 20px; margin: 14px 0 0; color: var(--wine); font: 700 .88rem/1.3 "Trebuchet MS", sans-serif; }
+    .music-start { min-height: 44px; margin: 12px 0 0; padding: 10px 18px; border: 2px solid var(--wine); border-radius: 4px; color: var(--cream); background: var(--wine); box-shadow: 4px 4px 0 var(--berry); cursor: pointer; font: 700 .75rem/1 "Trebuchet MS", sans-serif; letter-spacing: .06em; text-transform: uppercase; }
+    .music-start:hover, .music-start:focus-visible { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--berry); outline: none; }
     .memories { padding-block: clamp(18px, 4vw, 38px); }
     .memories .slide-content { width: min(100%, 690px); }
     .memories h2 { font-size: clamp(2rem, 5.3vw, 4rem); margin-bottom: 9px; }
@@ -167,7 +169,7 @@
           <div class="slide-content"><p class="eyebrow">Our little story</p><h2>Us, in all the <span class="accent">moments.</span></h2><p class="memory-note">From our first days to the life we are building as wife and husband, every memory with you is one I want to keep close.</p><div class="photo-wall" aria-label="Our memorable moments together"><figure><img src="image.png" alt="A memorable moment of us together" /></figure><figure><img src="image2.png" alt="A memorable moment of us together" /></figure><figure><img src="image3.png" alt="A memorable moment of us together" /></figure><figure><img src="image4.png" alt="A memorable moment of us together" /></figure><figure><img src="image5.png" alt="A memorable moment of us together" /></figure><figure><img src="image6.png" alt="A memorable moment of us together" /></figure><figure><img src="image7.jpeg" alt="A memorable moment of us together" /></figure></div><div class="memory-mobile" aria-label="Browse our memorable moments"><div class="memory-featured"><img id="memory-featured" src="image.png" alt="A memorable moment of us together" /></div><div class="memory-thumbnails"><button class="memory-thumb active" type="button" data-memory-image="image.png" aria-label="Show memory 1"><img src="image.png" alt="" /></button><button class="memory-thumb" type="button" data-memory-image="image2.png" aria-label="Show memory 2"><img src="image2.png" alt="" /></button><button class="memory-thumb" type="button" data-memory-image="image3.png" aria-label="Show memory 3"><img src="image3.png" alt="" /></button><button class="memory-thumb" type="button" data-memory-image="image4.png" aria-label="Show memory 4"><img src="image4.png" alt="" /></button><button class="memory-thumb" type="button" data-memory-image="image5.png" aria-label="Show memory 5"><img src="image5.png" alt="" /></button><button class="memory-thumb" type="button" data-memory-image="image6.png" aria-label="Show memory 6"><img src="image6.png" alt="" /></button><button class="memory-thumb" type="button" data-memory-image="image7.jpeg" aria-label="Show memory 7"><img src="image7.jpeg" alt="" /></button></div></div></div>
         </article>
         <article class="slide brainrot">
-          <div class="slide-content"><p class="eyebrow">Emergency intermission</p><h2>Our certified<br><span class="accent">brainrot.</span></h2><p class="brainrot-subtitle">Doctors say we should touch grass. We say one more meme.</p><div class="brainrot-gallery" aria-label="Our favorite brainrot images"><figure><img src="br.jpg" alt="A funny brainrot memory" /></figure><figure><img src="br1.png" alt="A funny brainrot memory" /></figure><figure><img src="br2.jpg" alt="A funny brainrot memory" /></figure><figure><img src="br3.gif" alt="An animated funny brainrot memory" /></figure></div><button class="brainrot-button" id="brainrot-button" type="button">Measure our chaos</button><p class="brainrot-score" id="brainrot-score" aria-live="polite">Chaos level: dangerously adorable.</p></div>
+          <div class="slide-content"><p class="eyebrow">Emergency intermission</p><h2>Our certified<br><span class="accent">brainrot.</span></h2><p class="brainrot-subtitle">Doctors say we should touch grass. We say one more meme.</p><div class="brainrot-gallery" aria-label="Our favorite brainrot images"><figure><img src="br.jpg" alt="A funny brainrot memory" /></figure><figure><img src="br1.png" alt="A funny brainrot memory" /></figure><figure><img src="br2.jpg" alt="A funny brainrot memory" /></figure><figure><img src="br3.gif" alt="An animated funny brainrot memory" /></figure></div><button class="brainrot-button" id="brainrot-button" type="button">Measure our chaos</button><p class="brainrot-score" id="brainrot-score" aria-live="polite">Chaos level: dangerously adorable.</p><button class="music-start" id="music-start" type="button" hidden>Play our song</button></div>
         </article>
         <article class="slide finale">
           <div class="slide-content"><p class="eyebrow">The best surprise</p><h2>I choose <span class="accent">you.</span><br>Every day.</h2><p class="lead">Happy birthday, my love. Thank you for being you, and for sharing your beautiful life with me.</p><p class="signature">Pee Pee La Boo, always yours.</p></div>
@@ -178,6 +180,9 @@
   </main>
   <div class="progress" id="progress" aria-hidden="true"></div>
   <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <audio id="longsong-music" loop preload="auto" src="lovesong.mp3"></audio>
+  <audio id="background-music" loop preload="auto" src="br.mp3"></audio>
+  <audio id="finale-music" loop preload="auto" src="faaa.mp3"></audio>
   <script>
     const track = document.querySelector('#track');
     const slides = [...document.querySelectorAll('.slide')];
@@ -190,6 +195,10 @@
     const featuredMemory = document.querySelector('#memory-featured');
     const brainrotButton = document.querySelector('#brainrot-button');
     const brainrotScore = document.querySelector('#brainrot-score');
+    const longsongMusic = document.querySelector('#longsong-music');
+    const backgroundMusic = document.querySelector('#background-music');
+    const finaleMusic = document.querySelector('#finale-music');
+    const musicStart = document.querySelector('#music-start');
     let activeSlide = 0;
     let touchStart = 0;
 
@@ -221,6 +230,32 @@
       brainrotScore.textContent = brainrotMessages[brainrotIndex];
     });
 
+    function playBackgroundMusic() {
+      backgroundMusic.volume = .8;
+      return backgroundMusic.play().then(() => {
+        musicStart.hidden = true;
+      }).catch(() => {
+        musicStart.hidden = false;
+      });
+    }
+
+    function stopMusic(audio) {
+      audio.pause();
+      audio.currentTime = 0;
+    }
+
+    function playLongsongMusic() {
+      longsongMusic.volume = .55;
+      longsongMusic.play().catch(() => {});
+    }
+
+    function playFinaleMusic() {
+      finaleMusic.volume = .8;
+      finaleMusic.play().catch(() => {});
+    }
+
+    musicStart.addEventListener('click', playBackgroundMusic);
+
     function showSlide(index) {
       activeSlide = (index + slides.length) % slides.length;
       track.style.transform = `translateX(-${activeSlide * 100}%)`;
@@ -230,6 +265,12 @@
       next.textContent = activeSlide === slides.length - 1 ? 'Start again' : 'Next surprise';
       progress.style.width = `${((activeSlide + 1) / slides.length) * 100}%`;
       [...dots.children].forEach((dot, dotIndex) => dot.classList.toggle('active', dotIndex === activeSlide));
+      if (activeSlide < 5 && longsongMusic.paused) playLongsongMusic();
+      if (activeSlide >= 5) stopMusic(longsongMusic);
+      if (activeSlide === 5 && backgroundMusic.paused) playBackgroundMusic();
+      if (activeSlide !== 5) { stopMusic(backgroundMusic); musicStart.hidden = true; }
+      if (activeSlide === 6 && finaleMusic.paused) playFinaleMusic();
+      if (activeSlide !== 6) stopMusic(finaleMusic);
       if (activeSlide === slides.length - 1) celebrate();
     }
 
