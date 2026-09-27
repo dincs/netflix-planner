@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room Rental Calculator</title>
+    <title>Room Rental Generator</title>
 
     <style>
         * {
@@ -11,20 +11,18 @@
         }
 
         body {
-            margin: 0;
-            padding: 30px 15px;
             font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            color: #222;
+            background: #f3f4f6;
+            padding: 20px;
         }
 
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: auto;
             background: white;
             padding: 25px;
-            border-radius: 15px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         h2 {
@@ -39,60 +37,57 @@
             font-weight: bold;
         }
 
+        select,
         input {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
-            border-radius: 8px;
+            border-radius: 7px;
             font-size: 16px;
-        }
-
-        textarea {
-            width: 100%;
-            min-height: 330px;
-            padding: 15px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-size: 14px;
-            line-height: 1.5;
-            resize: vertical;
-            margin-top: 10px;
+            background: white;
         }
 
         .summary {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 10px;
             margin-top: 20px;
+            padding: 15px;
+            background: #f8f8f8;
+            border-radius: 8px;
         }
 
-        .summary-row {
+        .summary div {
             display: flex;
             justify-content: space-between;
             padding: 6px 0;
         }
 
-        .total {
-            font-weight: bold;
+        .summary .total {
             border-top: 1px solid #ddd;
             margin-top: 5px;
             padding-top: 10px;
+            font-weight: bold;
+        }
+
+        textarea {
+            width: 100%;
+            height: 400px;
+            margin-top: 10px;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
         }
 
         button {
             width: 100%;
-            border: none;
+            margin-top: 12px;
             padding: 13px;
-            border-radius: 8px;
+            border: none;
+            border-radius: 7px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .generate {
-            background: #222;
-            color: white;
         }
 
         .copy {
@@ -100,8 +95,8 @@
             color: white;
         }
 
-        .copied {
-            background: #128C7E !important;
+        .copy.success {
+            background: #128C7E;
         }
     </style>
 </head>
@@ -110,83 +105,151 @@
 
 <div class="container">
 
-    <h2>🏠 Room Rental Calculator</h2>
+    <h2>🏠 Room Rental Generator</h2>
 
+    <!-- ROOM TYPE -->
     <label for="roomType">Room Type</label>
-    <input
-        type="text"
-        id="roomType"
-        placeholder="e.g. Small Room Non Sharing"
-        oninput="generateText()"
-    >
 
+    <select id="roomType" onchange="generateText()">
+        <option value="Small">Small</option>
+        <option value="Medium">Medium</option>
+        <option value="Master">Master</option>
+    </select>
+
+
+    <!-- SHARE TYPE -->
+    <label for="shareType">Share Type</label>
+
+    <select id="shareType" onchange="generateText()">
+        <option value="sharing">Sharing</option>
+        <option value="non sharing">Non Sharing</option>
+    </select>
+
+
+    <!-- CONDOMINIUM -->
+    <label for="condominium">Condominium</label>
+
+    <select id="condominium" onchange="generateText()">
+        <option value="WangsaMas">WangsaMas</option>
+        <option value="Hamilton">Hamilton</option>
+    </select>
+
+
+    <!-- MONTHLY RENT -->
     <label for="monthlyRent">Monthly Rent (RM)</label>
+
     <input
         type="number"
         id="monthlyRent"
-        placeholder="e.g. 500"
+        placeholder="e.g. 495"
         min="0"
-        step="1"
+        step="0.01"
         oninput="generateText()"
     >
 
+
+    <!-- SUMMARY -->
     <div class="summary">
-        <div class="summary-row">
+
+        <div>
+            <span>Room</span>
+            <strong id="roomDisplay">Small sharing WangsaMas</strong>
+        </div>
+
+        <div>
             <span>Monthly Rent</span>
             <strong id="rentDisplay">RM0</strong>
         </div>
 
-        <div class="summary-row">
+        <div>
             <span>Utility Deposit (½ month)</span>
             <strong id="utilityDisplay">RM0</strong>
         </div>
 
-        <div class="summary-row total">
+        <div class="total">
             <span>Refundable Deposit</span>
             <strong id="depositDisplay">RM0</strong>
         </div>
 
-        <div class="summary-row total">
+        <div class="total">
             <span>Move-in Payment</span>
             <strong id="moveInDisplay">RM0</strong>
         </div>
+
     </div>
 
-    <button class="generate" onclick="generateText()">
-        Generate Text
-    </button>
 
+    <!-- GENERATED TEXT -->
     <label for="output">Generated Text</label>
+
     <textarea id="output" readonly></textarea>
 
-    <button class="copy" id="copyBtn" onclick="copyText()">
-        📋 Copy to Clipboard
+
+    <!-- COPY -->
+    <button
+        class="copy"
+        id="copyBtn"
+        onclick="copyText()">
+        📋 Copy Text
     </button>
 
 </div>
 
+
 <script>
 
 function formatRM(amount) {
+
     return "RM" + Number(amount).toLocaleString("en-MY", {
         minimumFractionDigits: 0,
         maximumFractionDigits: 2
     });
+
 }
+
 
 function generateText() {
 
-    const roomType = document.getElementById("roomType").value.trim();
-    const rentInput = document.getElementById("monthlyRent").value;
+    // Get values
 
-    const rent = parseFloat(rentInput) || 0;
+    const roomType =
+        document.getElementById("roomType").value;
+
+    const shareType =
+        document.getElementById("shareType").value;
+
+    const condominium =
+        document.getElementById("condominium").value;
+
+    const rent =
+        parseFloat(
+            document.getElementById("monthlyRent").value
+        ) || 0;
+
+
+    // Room description
+
+    const roomDescription =
+        `${roomType} room ${shareType} ${condominium}`;
+
 
     // Calculations
-    const utilityDeposit = rent / 2;
-    const refundableDeposit = rent + utilityDeposit;
-    const moveInPayment = rent + 48;
+
+    const utilityDeposit =
+        rent / 2;
+
+    const refundableDeposit =
+        rent + utilityDeposit;
+
+    const moveInPayment =
+        rent + 48;
+
 
     // Update summary
+
+    document.getElementById("roomDisplay").textContent =
+        roomDescription;
+
     document.getElementById("rentDisplay").textContent =
         formatRM(rent);
 
@@ -199,56 +262,86 @@ function generateText() {
     document.getElementById("moveInDisplay").textContent =
         formatRM(moveInPayment);
 
-    // Generate message
+
+    // Generate WhatsApp text
+
     const text =
-`* [${roomType || "RoomType"}] room non sharing Wangsamas = ${formatRM(rent)} monthly(after discount)
+`* ${roomDescription} = ${formatRM(rent)} monthly(after discount)
 
-❇️ Deposit small room non sharing : 
-1 month ${formatRM(rent)} + 1/2month for depo utilities ${formatRM(utilityDeposit)} = ${formatRM(refundableDeposit)}(*Refundable)
+❇️ *Deposit small room non sharing :* 
+1 month ${formatRM(rent)}+1/2month for depo utilities ${formatRM(utilityDeposit)}=${formatRM(refundableDeposit)}(*Refundable)
 
-❇️ Berminat boleh bayar  deposit dulu (amount  as above) selepas viewing or dah confirm mmg nk book.
+❇️ *Berminat boleh bayar  deposit dulu* (amount  as above) selepas viewing or dah confirm mmg nk book.
 
-❇️ Bila berpindah nak masuk( done byr full deposit) pembayarannya: 1st rental ${formatRM(rent)} + IWK RM48  (indah water lumpsum dlm setahun) = ${formatRM(moveInPayment)}
+ *❇️ Bila berpindah nak masuk( done byr full deposit) pembayarannya: 1st rental ${formatRM(rent)} + IWK RM48  (indah water lumpsum dlm setahun) = ${formatRM(moveInPayment)}* 
 
 - Atas amount exclude carpark rental
 * Bil api dan air sharing asing iaitu dgn tenant lain byr setiap bulan
 
 ❇️Next rental onward only ${formatRM(rent)} monthly`;
 
-    document.getElementById("output").value = text;
+
+    document.getElementById("output").value =
+        text;
+
 }
+
 
 async function copyText() {
 
-    const output = document.getElementById("output");
-    const copyBtn = document.getElementById("copyBtn");
+    const output =
+        document.getElementById("output");
+
+    const button =
+        document.getElementById("copyBtn");
+
 
     try {
 
-        await navigator.clipboard.writeText(output.value);
+        await navigator.clipboard.writeText(
+            output.value
+        );
 
-        copyBtn.textContent = "✅ Copied!";
-        copyBtn.classList.add("copied");
+        button.textContent =
+            "✅ Copied!";
+
+        button.classList.add("success");
+
 
         setTimeout(() => {
-            copyBtn.textContent = "📋 Copy to Clipboard";
-            copyBtn.classList.remove("copied");
+
+            button.textContent =
+                "📋 Copy Text";
+
+            button.classList.remove("success");
+
         }, 1500);
+
 
     } catch (error) {
 
         output.select();
+
         document.execCommand("copy");
 
-        copyBtn.textContent = "✅ Copied!";
+        button.textContent =
+            "✅ Copied!";
+
 
         setTimeout(() => {
-            copyBtn.textContent = "📋 Copy to Clipboard";
+
+            button.textContent =
+                "📋 Copy Text";
+
         }, 1500);
+
     }
+
 }
 
+
 // Generate initial text
+
 generateText();
 
 </script>
