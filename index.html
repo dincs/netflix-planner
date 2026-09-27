@@ -2,215 +2,1082 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Room Rental Generator</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    <title>Room Management Toolkit</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+        html,
         body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
             font-family: Arial, sans-serif;
             background: #f3f4f6;
-            padding: 20px;
+            color: #222;
         }
 
-        .container {
-            max-width: 650px;
-            margin: auto;
+
+        /* =========================================
+           APP
+        ========================================= */
+
+        .app {
+            min-height: 100vh;
+        }
+
+
+        /* =========================================
+           SIDEBAR - DESKTOP
+        ========================================= */
+
+        .sidebar {
+            width: 240px;
+            background: #1f2937;
+            color: white;
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            padding: 20px 12px;
+
+            z-index: 1000;
+        }
+
+
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 12px 25px;
+        }
+
+        .logo span {
+            display: block;
+            margin-top: 5px;
+
+            color: #9ca3af;
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+
+        /* =========================================
+           MENU
+        ========================================= */
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            padding: 12px;
+
+            border-radius: 8px;
+
+            color: #d1d5db;
+
+            font-size: 14px;
+
+            cursor: pointer;
+
+            transition: background 0.2s;
+        }
+
+
+        .menu-item:hover {
+            background: #374151;
+            color: white;
+        }
+
+
+        .menu-item.active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        .menu-item.disabled {
+            opacity: 0.55;
+        }
+
+
+        .coming-soon {
+            margin-left: auto;
+
+            font-size: 9px;
+
+            background: #4b5563;
+
+            padding: 3px 5px;
+
+            border-radius: 4px;
+        }
+
+
+        /* =========================================
+           MAIN
+        ========================================= */
+
+        .main {
+            margin-left: 240px;
+
+            width: calc(100% - 240px);
+
+            min-height: 100vh;
+
+            padding: 30px;
+        }
+
+
+        /* =========================================
+           HEADER
+        ========================================= */
+
+        .page-header {
+            margin-bottom: 25px;
+        }
+
+
+        .page-header h1 {
+            margin: 0;
+
+            font-size: 26px;
+        }
+
+
+        .page-header p {
+            margin-top: 6px;
+
+            color: #6b7280;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================================
+           CARD
+        ========================================= */
+
+        .card {
+            width: 100%;
+            max-width: 750px;
+
             background: white;
+
             padding: 25px;
+
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.06);
         }
 
-        h2 {
-            margin-top: 0;
-            text-align: center;
-        }
+
+        /* =========================================
+           FORM
+        ========================================= */
 
         label {
             display: block;
+
             margin-top: 15px;
             margin-bottom: 6px;
+
+            font-size: 14px;
             font-weight: bold;
         }
+
 
         select,
         input {
             width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font-size: 16px;
+
+            min-height: 46px;
+
+            padding: 11px 12px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 8px;
+
             background: white;
+
+            font-size: 16px;
+
+            outline: none;
         }
+
+
+        select:focus,
+        input:focus,
+        textarea:focus {
+            border-color: #2563eb;
+
+            box-shadow:
+                0 0 0 2px rgba(37,99,235,0.1);
+        }
+
+
+        /* =========================================
+           SUMMARY
+        ========================================= */
 
         .summary {
             margin-top: 20px;
+
             padding: 15px;
-            background: #f8f8f8;
+
+            background: #f8fafc;
+
+            border: 1px solid #e5e7eb;
+
             border-radius: 8px;
         }
 
+
         .summary div {
             display: flex;
+
             justify-content: space-between;
-            padding: 6px 0;
+            align-items: center;
+
+            gap: 15px;
+
+            padding: 7px 0;
+
+            font-size: 14px;
         }
+
+
+        .summary div span {
+            color: #6b7280;
+        }
+
+
+        .summary div strong {
+            text-align: right;
+
+            word-break: break-word;
+        }
+
 
         .summary .total {
             border-top: 1px solid #ddd;
+
             margin-top: 5px;
-            padding-top: 10px;
+
+            padding-top: 12px;
+
             font-weight: bold;
         }
 
-        textarea {
-            width: 100%;
-            height: 400px;
-            margin-top: 10px;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font-size: 14px;
-            line-height: 1.5;
-            resize: vertical;
+
+        .summary .total span {
+            color: #222;
         }
+
+
+        /* =========================================
+           TEXTAREA
+        ========================================= */
+
+        textarea {
+            display: block;
+
+            width: 100%;
+
+            min-height: 380px;
+
+            margin-top: 10px;
+
+            padding: 12px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 8px;
+
+            font-family: Arial, sans-serif;
+
+            font-size: 14px;
+
+            line-height: 1.5;
+
+            resize: vertical;
+
+            outline: none;
+        }
+
+
+        /* =========================================
+           BUTTON
+        ========================================= */
 
         button {
             width: 100%;
+
+            min-height: 48px;
+
             margin-top: 12px;
-            padding: 13px;
+
+            padding: 12px;
+
             border: none;
-            border-radius: 7px;
-            font-size: 16px;
+
+            border-radius: 8px;
+
+            font-size: 15px;
+
             font-weight: bold;
+
             cursor: pointer;
+
+            touch-action: manipulation;
         }
+
 
         .copy {
             background: #25D366;
+
             color: white;
         }
+
+
+        .copy:active {
+            transform: scale(0.98);
+        }
+
 
         .copy.success {
             background: #128C7E;
         }
+
+
+        /* =========================================
+           COMING SOON
+        ========================================= */
+
+        .coming-page {
+            width: 100%;
+            max-width: 750px;
+
+            background: white;
+
+            padding: 50px 30px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            box-shadow:
+                0 4px 15px rgba(0,0,0,0.06);
+        }
+
+
+        .coming-page .icon {
+            font-size: 50px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .coming-page h2 {
+            margin-bottom: 8px;
+        }
+
+
+        .coming-page p {
+            color: #6b7280;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================================
+           TABLET
+        ========================================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+
+                width: calc(100% - 210px);
+
+                padding: 25px;
+            }
+
+        }
+
+
+        /* =========================================
+           MOBILE
+        ========================================= */
+
+        @media (max-width: 700px) {
+
+            body {
+                padding-bottom: 70px;
+            }
+
+
+            /* Remove desktop sidebar */
+
+            .sidebar {
+                position: fixed;
+
+                left: 0;
+                right: 0;
+
+                top: auto;
+                bottom: 0;
+
+                width: 100%;
+                height: 68px;
+
+                padding: 0;
+
+                background: #1f2937;
+
+                border-top: 1px solid #374151;
+            }
+
+
+            /* Hide logo */
+
+            .logo {
+                display: none;
+            }
+
+
+            /* Horizontal mobile navigation */
+
+            .menu {
+                width: 100%;
+                height: 100%;
+
+                display: flex;
+
+                flex-direction: row;
+
+                justify-content: space-around;
+
+                align-items: stretch;
+
+                gap: 0;
+            }
+
+
+            .menu-item {
+                flex: 1;
+
+                min-width: 0;
+
+                padding: 7px 3px;
+
+                border-radius: 0;
+
+                display: flex;
+
+                flex-direction: column;
+
+                justify-content: center;
+
+                align-items: center;
+
+                gap: 3px;
+
+                text-align: center;
+
+                font-size: 20px;
+            }
+
+
+            .menu-item:hover {
+                background: transparent;
+            }
+
+
+            .menu-item.active {
+                background: #2563eb;
+            }
+
+
+            .menu-text {
+                display: block;
+
+                max-width: 70px;
+
+                overflow: hidden;
+
+                text-overflow: ellipsis;
+
+                white-space: nowrap;
+
+                font-size: 9px;
+            }
+
+
+            .coming-soon {
+                display: none;
+            }
+
+
+            /* Main */
+
+            .main {
+                margin-left: 0;
+
+                width: 100%;
+
+                min-height: calc(100vh - 68px);
+
+                padding: 18px 12px;
+            }
+
+
+            /* Header */
+
+            .page-header {
+                margin-bottom: 18px;
+            }
+
+
+            .page-header h1 {
+                font-size: 22px;
+            }
+
+
+            .page-header p {
+                font-size: 13px;
+
+                margin-top: 5px;
+            }
+
+
+            /* Card */
+
+            .card {
+                width: 100%;
+
+                padding: 18px;
+
+                border-radius: 10px;
+            }
+
+
+            /* Form */
+
+            label {
+                margin-top: 14px;
+
+                font-size: 13px;
+            }
+
+
+            select,
+            input {
+                min-height: 48px;
+
+                font-size: 16px;
+            }
+
+
+            /* Summary */
+
+            .summary {
+                padding: 13px;
+
+                margin-top: 18px;
+            }
+
+
+            .summary div {
+                font-size: 13px;
+
+                padding: 7px 0;
+            }
+
+
+            .summary div:first-child {
+                align-items: flex-start;
+            }
+
+
+            /* Text */
+
+            textarea {
+                min-height: 360px;
+
+                font-size: 13px;
+
+                padding: 11px;
+            }
+
+
+            /* Button */
+
+            button {
+                min-height: 50px;
+
+                font-size: 16px;
+            }
+
+
+            /* Coming Soon */
+
+            .coming-page {
+                padding: 45px 20px;
+            }
+
+
+            .coming-page .icon {
+                font-size: 45px;
+            }
+
+        }
+
+
+        /* =========================================
+           VERY SMALL PHONES
+        ========================================= */
+
+        @media (max-width: 380px) {
+
+            .main {
+                padding: 14px 10px;
+            }
+
+
+            .card {
+                padding: 15px;
+            }
+
+
+            .page-header h1 {
+                font-size: 20px;
+            }
+
+
+            .menu-item {
+                font-size: 18px;
+            }
+
+
+            .menu-text {
+                font-size: 8px;
+            }
+
+
+            .summary div {
+                font-size: 12px;
+            }
+
+        }
+
     </style>
+
 </head>
+
 
 <body>
 
-<div class="container">
 
-    <h2>🏠 Room Rental Generator</h2>
-
-    <!-- ROOM TYPE -->
-    <label for="roomType">Room Type</label>
-
-    <select id="roomType" onchange="generateText()">
-        <option value="Small">Small</option>
-        <option value="Medium">Medium</option>
-        <option value="Master">Master</option>
-    </select>
+<div class="app">
 
 
-    <!-- SHARE TYPE -->
-    <label for="shareType">Share Type</label>
+    <!-- =========================================
+         NAVIGATION
+    ========================================= -->
 
-    <select id="shareType" onchange="generateText()">
-        <option value="sharing">Sharing</option>
-        <option value="non sharing">Non Sharing</option>
-    </select>
+    <aside class="sidebar">
 
+        <div class="logo">
 
-    <!-- CONDOMINIUM -->
-    <label for="condominium">Condominium</label>
+            🏠 Room Toolkit
 
-    <select id="condominium" onchange="generateText()">
-        <option value="WangsaMas">WangsaMas</option>
-        <option value="Hamilton">Hamilton</option>
-    </select>
+            <span>
+                Room Management Tools
+            </span>
 
-
-    <!-- MONTHLY RENT -->
-    <label for="monthlyRent">Monthly Rent (RM)</label>
-
-    <input
-        type="number"
-        id="monthlyRent"
-        placeholder="e.g. 495"
-        min="0"
-        step="0.01"
-        oninput="generateText()"
-    >
-
-
-    <!-- SUMMARY -->
-    <div class="summary">
-
-        <div>
-            <span>Room</span>
-            <strong id="roomDisplay">Small sharing WangsaMas</strong>
         </div>
 
-        <div>
-            <span>Monthly Rent</span>
-            <strong id="rentDisplay">RM0</strong>
+
+        <div class="menu">
+
+
+            <div
+                class="menu-item active"
+                onclick="showPage('rental')">
+
+                💰
+
+                <span class="menu-text">
+                    Rental
+                </span>
+
+            </div>
+
+
+            <div
+                class="menu-item disabled"
+                onclick="showComingSoon('Room Availability')">
+
+                🏠
+
+                <span class="menu-text">
+                    Availability
+                </span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+
+            </div>
+
+
+            <div
+                class="menu-item disabled"
+                onclick="showComingSoon('Tenant Management')">
+
+                👤
+
+                <span class="menu-text">
+                    Tenants
+                </span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+
+            </div>
+
+
+            <div
+                class="menu-item disabled"
+                onclick="showComingSoon('Payment Tracker')">
+
+                💳
+
+                <span class="menu-text">
+                    Payment
+                </span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+
+            </div>
+
+
+            <div
+                class="menu-item disabled"
+                onclick="showComingSoon('Utility Calculator')">
+
+                ⚡
+
+                <span class="menu-text">
+                    Utility
+                </span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+
+            </div>
+
+
+            <div
+                class="menu-item disabled"
+                onclick="showComingSoon('Rental Summary')">
+
+                📊
+
+                <span class="menu-text">
+                    Summary
+                </span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+
+            </div>
+
+
+            <div
+                class="menu-item disabled"
+                onclick="showComingSoon('Settings')">
+
+                ⚙️
+
+                <span class="menu-text">
+                    Settings
+                </span>
+
+                <span class="coming-soon">
+                    SOON
+                </span>
+
+            </div>
+
+
         </div>
 
-        <div>
-            <span>Utility Deposit (½ month)</span>
-            <strong id="utilityDisplay">RM0</strong>
-        </div>
-
-        <div class="total">
-            <span>Refundable Deposit</span>
-            <strong id="depositDisplay">RM0</strong>
-        </div>
-
-        <div class="total">
-            <span>Move-in Payment</span>
-            <strong id="moveInDisplay">RM0</strong>
-        </div>
-
-    </div>
+    </aside>
 
 
-    <!-- GENERATED TEXT -->
-    <label for="output">Generated Text</label>
 
-    <textarea id="output" readonly></textarea>
+    <!-- =========================================
+         MAIN
+    ========================================= -->
 
+    <main class="main">
 
-    <!-- COPY -->
-    <button
-        class="copy"
-        id="copyBtn"
-        onclick="copyText()">
-        📋 Copy Text
-    </button>
+        <div id="content"></div>
+
+    </main>
+
 
 </div>
 
 
+
 <script>
 
-function formatRM(amount) {
 
-    return "RM" + Number(amount).toLocaleString("en-MY", {
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 2
-    });
+/* =========================================
+   RENTAL PAGE
+========================================= */
+
+function rentalPage() {
+
+    document.getElementById("content").innerHTML = `
+
+        <div class="page-header">
+
+            <h1>
+                Room Rental Generator
+            </h1>
+
+            <p>
+                Generate WhatsApp-ready rental information.
+            </p>
+
+        </div>
+
+
+        <div class="card">
+
+
+            <label>
+                Room Type
+            </label>
+
+            <select
+                id="roomType"
+                onchange="generateText()">
+
+                <option value="Small">
+                    Small
+                </option>
+
+                <option value="Medium">
+                    Medium
+                </option>
+
+                <option value="Master">
+                    Master
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Share Type
+            </label>
+
+            <select
+                id="shareType"
+                onchange="generateText()">
+
+                <option value="Sharing">
+                    Sharing
+                </option>
+
+                <option value="Non Sharing">
+                    Non Sharing
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Condominium
+            </label>
+
+            <select
+                id="condominium"
+                onchange="generateText()">
+
+                <option value="WangsaMas">
+                    WangsaMas
+                </option>
+
+                <option value="Hamilton">
+                    Hamilton
+                </option>
+
+            </select>
+
+
+
+            <label>
+                Monthly Rent (RM)
+            </label>
+
+            <input
+                type="number"
+                id="monthlyRent"
+                placeholder="e.g. 495"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                oninput="generateText()"
+            >
+
+
+
+            <div class="summary">
+
+
+                <div>
+
+                    <span>
+                        Room
+                    </span>
+
+                    <strong id="roomDisplay">
+                        Small room sharing WangsaMas
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Monthly Rent
+                    </span>
+
+                    <strong id="rentDisplay">
+                        RM0
+                    </strong>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        Utility Deposit
+                    </span>
+
+                    <strong id="utilityDisplay">
+                        RM0
+                    </strong>
+
+                </div>
+
+
+                <div class="total">
+
+                    <span>
+                        Refundable Deposit
+                    </span>
+
+                    <strong id="depositDisplay">
+                        RM0
+                    </strong>
+
+                </div>
+
+
+                <div class="total">
+
+                    <span>
+                        Move-in Payment
+                    </span>
+
+                    <strong id="moveInDisplay">
+                        RM0
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <label>
+                Generated Text
+            </label>
+
+
+            <textarea
+                id="output"
+                readonly>
+            </textarea>
+
+
+
+            <button
+                class="copy"
+                id="copyBtn"
+                onclick="copyText()">
+
+                📋 Copy Text
+
+            </button>
+
+
+        </div>
+
+    `;
+
+
+    generateText();
 
 }
 
 
-function generateText() {
 
-    // Get values
+/* =========================================
+   GENERATE TEXT
+========================================= */
+
+function generateText() {
 
     const roomType =
         document.getElementById("roomType").value;
@@ -227,43 +1094,41 @@ function generateText() {
         ) || 0;
 
 
-    // Room description
-
     const roomDescription =
-        `${roomType} room ${shareType} ${condominium}`;
+        `${roomType} room ${shareType.toLowerCase()} ${condominium}`;
 
-
-    // Calculations
 
     const utilityDeposit =
         rent / 2;
 
+
     const refundableDeposit =
         rent + utilityDeposit;
+
 
     const moveInPayment =
         rent + 48;
 
 
-    // Update summary
-
     document.getElementById("roomDisplay").textContent =
         roomDescription;
+
 
     document.getElementById("rentDisplay").textContent =
         formatRM(rent);
 
+
     document.getElementById("utilityDisplay").textContent =
         formatRM(utilityDeposit);
+
 
     document.getElementById("depositDisplay").textContent =
         formatRM(refundableDeposit);
 
+
     document.getElementById("moveInDisplay").textContent =
         formatRM(moveInPayment);
 
-
-    // Generate WhatsApp text
 
     const text =
 `* ${roomDescription} = ${formatRM(rent)} monthly(after discount)
@@ -287,6 +1152,27 @@ function generateText() {
 }
 
 
+
+/* =========================================
+   FORMAT RM
+========================================= */
+
+function formatRM(amount) {
+
+    return "RM" +
+        Number(amount).toLocaleString("en-MY", {
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 2
+        });
+
+}
+
+
+
+/* =========================================
+   COPY
+========================================= */
+
 async function copyText() {
 
     const output =
@@ -302,8 +1188,10 @@ async function copyText() {
             output.value
         );
 
+
         button.textContent =
             "✅ Copied!";
+
 
         button.classList.add("success");
 
@@ -324,6 +1212,7 @@ async function copyText() {
 
         document.execCommand("copy");
 
+
         button.textContent =
             "✅ Copied!";
 
@@ -340,9 +1229,67 @@ async function copyText() {
 }
 
 
-// Generate initial text
 
-generateText();
+/* =========================================
+   NAVIGATION
+========================================= */
+
+function showPage(page) {
+
+    if (page === "rental") {
+
+        rentalPage();
+
+    }
+
+}
+
+
+function showComingSoon(feature) {
+
+    document.getElementById("content").innerHTML = `
+
+        <div class="page-header">
+
+            <h1>
+                ${feature}
+            </h1>
+
+            <p>
+                Room Management Toolkit
+            </p>
+
+        </div>
+
+
+        <div class="coming-page">
+
+            <div class="icon">
+                🚧
+            </div>
+
+            <h2>
+                Coming Soon
+            </h2>
+
+            <p>
+                The <strong>${feature}</strong>
+                feature is currently under development.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+
+/* =========================================
+   INITIALIZE
+========================================= */
+
+rentalPage();
 
 </script>
 
